@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NovaSphere — AI-powered infrastructure for the next generation of human-machine collaboration. Build, scale, and deploy with unprecedented speed." />
+  <meta name="keywords" content="AI infrastructure, machine learning, cloud platform, startup, automation" />
+  <meta name="author" content="NovaSphere Inc." />
+  <meta property="og:title" content="NovaSphere — Build the Future" />
+  <meta property="og:description" content="AI-powered infrastructure for the next generation of human-machine collaboration." />
+  <meta property="og:type" content="website" />
+  <title>NovaSphere — Build the Future</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & TOKENS ────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #080b12;
+      --bg2:       #0d1120;
+      --glass:     rgba(255,255,255,0.04);
+      --glass-b:   rgba(255,255,255,0.10);
+      --border:    rgba(255,255,255,0.08);
+      --border-h:  rgba(255,255,255,0.18);
+      --accent:    #00e5ff;
+      --accent2:   #7c3aed;
+      --accent3:   #f59e0b;
+      --text:      #e8eaf0;
+      --muted:     #6b7280;
+      --card-r:    16px;
+      --transition: cubic-bezier(.25,.8,.25,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--accent); color: #000; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── SCROLLBAR ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 99px; }
+
+    /* ── NOISE OVERLAY ─────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    /* ── AURORA BLOBS ──────────────────────────────────────── */
+    .aurora {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    }
+    .aurora span {
+      position: absolute; border-radius: 50%;
+      filter: blur(120px); opacity: 0.18; animation: drift 20s ease-in-out infinite alternate;
+    }
+    .aurora span:nth-child(1) { width: 700px; height: 700px; background: var(--accent2); top: -200px; left: -200px; animation-duration: 22s; }
+    .aurora span:nth-child(2) { width: 500px; height: 500px; background: var(--accent); top: 40%; right: -150px; animation-duration: 18s; animation-delay: -5s; }
+    .aurora span:nth-child(3) { width: 400px; height: 400px; background: var(--accent3); bottom: -100px; left: 30%; animation-duration: 25s; animation-delay: -10s; opacity: .10; }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(60px,40px) scale(1.12); }
+    }
+
+    /* ── LAYOUT ────────────────────────────────────────────── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    section { position: relative; z-index: 1; }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0;
+      transition: background .4s, backdrop-filter .4s, border-color .4s;
+    }
+    nav.scrolled {
+      background: rgba(8,11,18,.75);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.35rem;
+      letter-spacing: -.5px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: .875rem; font-weight: 500; color: var(--muted);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta {
+      padding: 9px 22px; border-radius: 99px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff; font-size: .875rem; font-weight: 600;
+      transition: opacity .2s, transform .2s;
+    }
+    .nav-cta:hover { opacity: .85; transform: translateY(-1px); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      background: none; border: none; padding: 4px;
+    }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: .3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    /* mobile menu */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 99;
+      background: rgba(8,11,18,.97); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; color: #fff; }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .hero {
+      min-height: 100svh; display: flex; align-items: center;
+      padding: 120px 0 80px;
+    }
+    .hero-inner { text-align: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 99px;
+      background: var(--glass); border: 1px solid var(--border);
+      font-size: .8rem; font-weight: 500; color: var(--accent);
+      margin-bottom: 28px;
+      animation: fadeUp .8s var(--transition) .1s both;
+    }
+    .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: block; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+    h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.06; letter-spacing: -2px;
+      animation: fadeUp .8s var(--transition) .2s both;
+    }
+    h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub {
+      max-width: 580px; margin: 22px auto 44px;
+      color: var(--muted); font-size: 1.1rem; font-weight: 300;
+      animation: fadeUp .8s var(--transition) .35s both;
+    }
+    .hero-actions {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp .8s var(--transition) .5s both;
+    }
+    .btn-primary {
+      padding: 14px 34px; border-radius: 99px;
+      background: linear-gradient(135deg, var(--accent2), #06b6d4);
+      color: #fff; font-weight: 600; font-size: .95rem;
+      box-shadow: 0 0 40px rgba(124,58,237,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(124,58,237,.55); }
+    .btn-outline {
+      padding: 14px 34px; border-radius: 99px;
+      border: 1px solid var(--border-h); color: #fff;
+      font-weight: 500; font-size: .95rem;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-outline:hover { background: var(--glass); border-color: var(--glass-b); }
+    .hero-metrics {
+      display: flex; justify-content: center; gap: 48px; margin-top: 72px; flex-wrap: wrap;
+      animation: fadeUp .8s var(--transition) .65s both;
+    }
+    .metric { text-align: center; }
+    .metric-val {
+      font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .metric-label { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
+    /* hero grid visual */
+    .hero-grid {
+      position: absolute; inset: 0; z-index: -1;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(28px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── LOGO BAR ──────────────────────────────────────────── */
+    .logobar { padding: 36px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .logobar-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .logobar p { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+    .logos { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
+    .logo-pill {
+      font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700;
+      color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+      transition: color .2s;
+    }
+    .logo-pill:hover { color: #fff; }
+
+    /* ── SECTION HEADER ────────────────────────────────────── */
+    .s-tag {
+      display: inline-block; padding: 4px 14px; border-radius: 99px;
+      background: rgba(0,229,255,.08); border: 1px solid rgba(0,229,255,.2);
+      font-size: .75rem; font-weight: 600; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1.1; letter-spacing: -1px;
+    }
+    .section-sub { color: var(--muted); max-width: 520px; margin-top: 14px; }
+
+    /* ── FEATURES ──────────────────────────────────────────── */
+    .features { padding: 100px 0; }
+    .features-head { margin-bottom: 64px; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+    }
+    .feat-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 32px;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+      cursor: default;
+    }
+    .feat-card:hover {
+      border-color: var(--border-h); transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; font-size: 1.4rem;
+    }
+    .feat-card h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;
+    }
+    .feat-card p { font-size: .9rem; color: var(--muted); line-height: 1.65; }
+    /* big card */
+    .feat-card.big { grid-column: span 2; display: flex; gap: 32px; align-items: center; }
+    .feat-card.big .feat-content { flex: 1; }
+    .feat-card.big .feat-visual {
+      flex: 1; border-radius: 12px; overflow: hidden;
+      background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(0,229,255,.1));
+      min-height: 180px; display: flex; align-items: center; justify-content: center;
+    }
+    .feat-card.big .feat-visual svg { opacity: .5; }
+
+    /* ── HOW IT WORKS ──────────────────────────────────────── */
+    .how { padding: 100px 0; }
+    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 60px; position: relative; }
+    .steps::before {
+      content:''; position: absolute; top: 28px; left: 12.5%; right: 12.5%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+    }
+    .step { text-align: center; padding: 0 16px; }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--bg2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+      margin: 0 auto 20px;
+      position: relative; z-index: 1;
+      transition: background .3s, border-color .3s, box-shadow .3s;
+    }
+    .step:hover .step-num {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-color: transparent; box-shadow: 0 0 30px rgba(124,58,237,.4);
+    }
+    .step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+    .step p { font-size: .85rem; color: var(--muted); }
+
+    /* ── TESTIMONIALS ──────────────────────────────────────── */
+    .testimonials { padding: 100px 0; }
+    .test-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 60px; }
+    .test-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 28px;
+      transition: border-color .3s, transform .3s;
+    }
+    .test-card:hover { border-color: var(--border-h); transform: translateY(-3px); }
+    .stars { color: var(--accent3); font-size: .9rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .test-card blockquote {
+      font-size: .9rem; color: #c9cdd6; line-height: 1.7; margin-bottom: 20px;
+      font-style: italic;
+    }
+    .test-author { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem;
+      flex-shrink: 0;
+    }
+    .test-name { font-weight: 600; font-size: .88rem; }
+    .test-role { font-size: .78rem; color: var(--muted); }
+
+    /* ── PRICING ───────────────────────────────────────────── */
+    .pricing { padding: 100px 0; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 60px; }
+    .price-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 36px 32px;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+      position: relative; overflow: hidden;
+    }
+    .price-card.featured {
+      border-color: rgba(124,58,237,.5);
+      background: linear-gradient(160deg, rgba(124,58,237,.12), rgba(0,229,255,.06));
+      box-shadow: 0 0 60px rgba(124,58,237,.15);
+      transform: scale(1.03);
+    }
+    .price-card:hover { border-color: var(--border-h); transform: translateY(-4px); }
+    .price-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+    .popular-badge {
+      position: absolute; top: 16px; right: 16px;
+      padding: 4px 12px; border-radius: 99px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      font-size: .7rem; font-weight: 700; color: #fff; letter-spacing: .5px;
+    }
+    .plan-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--muted); margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase; }
+    .plan-price {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 3rem;
+      line-height: 1; margin-bottom: 4px;
+    }
+    .plan-price sup { font-size: 1.2rem; vertical-align: super; }
+    .plan-period { font-size: .82rem; color: var(--muted); margin-bottom: 24px; }
+    .plan-features { list-style: none; margin-bottom: 32px; }
+    .plan-features li {
+      padding: 9px 0; font-size: .88rem; color: #b0b8c9;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .plan-features li:last-child { border-bottom: none; }
+    .plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; font-size: .85rem; }
+    .plan-features li.disabled { color: var(--muted); }
+    .plan-features li.disabled::before { content: '—'; color: var(--muted); }
+    .btn-plan {
+      width: 100%; padding: 13px; border-radius: 99px;
+      font-weight: 600; font-size: .9rem; cursor: pointer; border: none;
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+    }
+    .btn-plan.primary {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff; box-shadow: 0 0 30px rgba(124,58,237,.35);
+    }
+    .btn-plan.primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(124,58,237,.5); }
+    .btn-plan.outline {
+      background: transparent; border: 1px solid var(--border-h); color: #fff;
+    }
+    .btn-plan.outline:hover { background: var(--glass); }
+
+    /* ── FAQ ───────────────────────────────────────────────── */
+    .faq { padding: 100px 0; }
+    .faq-grid { max-width: 740px; margin: 60px auto 0; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-q {
+      width: 100%; background: none; border: none; color: #fff;
+      text-align: left; padding: 22px 0;
+      font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1rem;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      transition: color .2s;
+    }
+    .faq-q:hover { color: var(--accent); }
+    .faq-icon {
+      width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.1rem; transition: background .3s, border-color .3s, transform .3s;
+    }
+    .faq-item.open .faq-icon { background: var(--accent2); border-color: var(--accent2); transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height .4s var(--transition), padding .3s;
+    }
+    .faq-a p { padding-bottom: 20px; font-size: .9rem; color: var(--muted); line-height: 1.75; }
+    .faq-item.open .faq-a { max-height: 300px; }
+
+    /* ── CONTACT ───────────────────────────────────────────── */
+    .contact { padding: 100px 0; }
+    .contact-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+    }
+    .contact-info h2 { margin-bottom: 14px; }
+    .contact-info p { color: var(--muted); font-size: .95rem; margin-bottom: 36px; }
+    .contact-detail { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .contact-detail-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: var(--glass); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-detail-text p:first-child { font-weight: 600; font-size: .88rem; margin-bottom: 2px; }
+    .contact-detail-text p:last-child { font-size: .82rem; color: var(--muted); }
+    .contact-form {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 36px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: .8rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field textarea, .field select {
+      width: 100%; background: rgba(255,255,255,.04);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: #fff; font-family: 'DM Sans', sans-serif; font-size: .9rem;
+      padding: 11px 14px; outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--accent); background: rgba(0,229,255,.04);
+    }
+    .field select option { background: #0d1120; }
+    .field textarea { resize: vertical; min-height: 110px; }
+    .form-btn {
+      width: 100%; padding: 14px; border-radius: 99px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff; font-weight: 700; font-size: .95rem;
+      border: none; cursor: pointer;
+      box-shadow: 0 0 30px rgba(124,58,237,.3);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .form-btn:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(124,58,237,.5); }
+    .form-success {
+      display: none; text-align: center; padding: 20px 0;
+      color: var(--accent); font-weight: 600; font-size: 1rem;
+    }
+
+    /* ── CTA BANNER ────────────────────────────────────────── */
+    .cta-banner {
+      padding: 80px 0; position: relative; overflow: hidden;
+    }
+    .cta-inner {
+      background: linear-gradient(135deg, rgba(124,58,237,.25), rgba(0,229,255,.12));
+      border: 1px solid rgba(124,58,237,.3);
+      border-radius: 24px; padding: 64px 48px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-inner::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(124,58,237,.3), transparent);
+      pointer-events: none;
+    }
+    .cta-inner h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 14px; }
+    .cta-inner p { color: var(--muted); max-width: 480px; margin: 0 auto 36px; }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border); padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand p { font-size: .88rem; color: var(--muted); margin-top: 14px; max-width: 260px; line-height: 1.65; }
+    .footer-socials { display: flex; gap: 12px; margin-top: 24px; }
+    .social-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--glass); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; transition: background .2s, border-color .2s;
+    }
+    .social-btn:hover { background: var(--glass-b); border-color: var(--border-h); }
+    .footer-col h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem; margin-bottom: 18px; letter-spacing: .5px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { font-size: .85rem; color: var(--muted); transition: color .2s; }
+    .footer-col ul li a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 28px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 12px;
+    }
+    .footer-bottom p { font-size: .8rem; color: var(--muted); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: .8rem; color: var(--muted); transition: color .2s; }
+    .footer-legal a:hover { color: #fff; }
+
+    /* ── SCROLL REVEAL ─────────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s var(--transition), transform .7s var(--transition); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feat-card.big { grid-column: span 2; flex-direction: column; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .steps::before { display: none; }
+      .test-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .price-card.featured { transform: none; }
+      .contact-inner { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: span 2; }
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 2.4rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feat-card.big { grid-column: span 1; }
+      .steps { grid-template-columns: 1fr; }
+      .hero-metrics { gap: 28px; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-brand { grid-column: span 1; }
+      .cta-inner { padding: 40px 24px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Aurora bg -->
+<div class="aurora" aria-hidden="true">
+  <span></span><span></span><span></span>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo">NovaSphere</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#pricing" class="nav-cta">Get Started</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" onclick="closeMenu()">Features</a>
+  <a href="#how" onclick="closeMenu()">How It Works</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="#pricing" class="btn-primary" onclick="closeMenu()">Get Started →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <div class="hero-badge"><span></span> Now in Public Beta — Series A Announced</div>
+    <h1>Intelligence<br />that <em>scales</em> with you</h1>
+    <p class="hero-sub">NovaSphere delivers enterprise-grade AI infrastructure for teams that refuse to slow down. Deploy in minutes. Scale to billions.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Start for free →</a>
+      <a href="#how" class="btn-outline">See how it works</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="metric-val">12ms</div><div class="metric-label">Avg. inference latency</div></div>
+      <div class="metric"><div class="metric-val">99.99%</div><div class="metric-label">Uptime SLA</div></div>
+      <div class="metric"><div class="metric-val">4,200+</div><div class="metric-label">Companies trust us</div></div>
+      <div class="metric"><div class="metric-val">180+</div><div class="metric-label">Countries served</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO BAR -->
+<div class="logobar">
+  <div class="container logobar-inner">
+    <p>Trusted by leading teams at</p>
+    <div class="logos">
+      <span class="logo-pill">Vercel</span>
+      <span class="logo-pill">Stripe</span>
+      <span class="logo-pill">Linear</span>
+      <span class="logo-pill">Figma</span>
+      <span class="logo-pill">Notion</span>
+      <span class="logo-pill">Loom</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="features-head reveal">
+      <span class="s-tag">Features</span>
+      <h2>Everything you need,<br />nothing you don't</h2>
+      <p class="section-sub">A complete AI platform engineered for reliability, speed, and developer happiness.</p>
+    </div>
+    <div class="features-grid">
+      <!-- big card -->
+      <div class="feat-card big reveal">
+        <div class="feat-content">
+          <div class="feat-icon" style="background:rgba(124,58,237,.15)">🧠</div>
+          <h3>Neural Inference Engine</h3>
+          <p>Our custom-built inference stack delivers sub-15ms latency at scale. Powered by distributed GPU clusters across 28 global regions with automatic load balancing and failover.</p>
+        </div>
+        <div class="feat-visual" aria-hidden="true">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="40" stroke="#00e5ff" stroke-width="1" stroke-dasharray="4 4"/>
+            <circle cx="60" cy="60" r="24" stroke="#7c3aed" stroke-width="1"/>
+            <circle cx="60" cy="60" r="8" fill="#00e5ff" opacity=".6"/>
+            <line x1="60" y1="20" x2="60" y2="36" stroke="#00e5ff" stroke-width="1"/>
+            <line x1="100" y1="60" x2="84" y2="60" stroke="#00e5ff" stroke-width="1"/>
+            <line x1="60" y1="100" x2="60" y2="84" stroke="#00e5ff" stroke-width="1"/>
+            <line x1="20" y1="60" x2="36" y2="60" stroke="#00e5ff" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon" style="background:rgba(0,229,255,.1)">⚡</div>
+        <h3>Realtime Streaming</h3>
+        <p>Stream model outputs token-by-token with WebSocket connections. Keep users engaged with instant, progressive responses.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:rgba(245,158,11,.1)">🔐</div>
+        <h3>Enterprise Security</h3>
+        <p>SOC 2 Type II certified. End-to-end encryption, role-based access, and private VPC deployments for maximum data isolation.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon" style="background:rgba(124,58,237,.15)">📊</div>
+        <h3>Observability Suite</h3>
+        <p>Full-stack monitoring, request tracing, latency histograms, and cost analytics. Know exactly what's happening at every layer.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-2">
+        <div class="feat-icon" style="background:rgba(0,229,255,.1)">🔌</div>
+        <h3>Universal Integrations</h3>
+        <p>Native SDKs for Python, TypeScript, Go, and Rust. REST & GraphQL APIs. Webhooks, Zapier, and 200+ pre-built connectors.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <span class="s-tag">Process</span>
+      <h2>Up and running in 4 steps</h2>
+      <p class="section-sub" style="margin:14px auto 0">From signup to production in under 10 minutes — no PhD required.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Create Account</h3>
+        <p>Sign up with GitHub or email. No credit card needed for the free tier.</p>
+      </div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <h3>Connect Your Data</h3>
+        <p>Bring your own data via S3, GCS, or our drag-and-drop uploader.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <h3>Configure & Deploy</h3>
+        <p>Choose a model, set parameters, and deploy to production in one click.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">04</div>
+        <h3>Monitor & Scale</h3>
+        <p>Auto-scaling handles traffic spikes. Real-time dashboards keep you informed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <span class="s-tag">Testimonials</span>
+      <h2>Loved by builders worldwide</h2>
+      <p class="section-sub" style="margin:14px auto 0">Don't take our word for it — here's what teams are saying.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <div class="stars">★★★★★</div>
+        <blockquote>"NovaSphere cut our inference costs by 60% while tripling throughput. The observability tools alone are worth the price. Genuinely the best infrastructure decision we've made this year."</blockquote>
+        <div class="test-author">
+          <div class="avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">AK</div>
+          <div>
+            <div class="test-name">Arjun Kapoor</div>
+            <div class="test-role">CTO, Moonbeam AI</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <blockquote>"We migrated from two different providers to NovaSphere in a weekend. The API is exquisitely designed and the documentation is some of the best I've ever read."</blockquote>
+        <div class="test-author">
+          <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">SR</div>
+          <div>
+            <div class="test-name">Sofia Reinholt</div>
+            <div class="test-role">Lead Engineer, Flux Labs</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The 99.99% uptime SLA isn't marketing — we've been live for 8 months without a single incident. For a healthcare product, that reliability is absolutely non-negotiable."</blockquote>
+        <div class="test-author">
+          <div class="avatar" style="background:linear-gradient(135deg,#00e5ff,#7c3aed)">MC</div>
+          <div>
+            <div class="test-name">Marcus Chen</div>
+            <div class="test-role">VP Product, Meridian Health</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <span class="s-tag">Pricing</span>
+      <h2>Simple, transparent pricing</h2>
+      <p class="section-sub" style="margin:14px auto 0">Scale from zero to billions without surprise bills. Cancel anytime.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="price-card reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><sup>$</sup>0</div>
+        <div class="plan-period">Free forever</div>
+        <ul class="plan-features">
+          <li>1M tokens / month</li>
+          <li>3 deployments</li>
+          <li>Community support</li>
+          <li>REST API access</li>
+          <li class="disabled">Private VPC</li>
+          <li class="disabled">SLA guarantee</li>
+        </ul>
+        <button class="btn-plan outline" onclick="alert('Welcome! Sign up to start for free.')">Get started free</button>
+      </div>
+      <!-- Pro (featured) -->
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="popular-badge">Most Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><sup>$</sup>79</div>
+        <div class="plan-period">per seat / month</div>
+        <ul class="plan-features">
+          <li>50M tokens / month</li>
+          <li>Unlimited deployments</li>
+          <li>Priority email support</li>
+          <li>REST + GraphQL API</li>
+          <li>Observability suite</li>
+          <li class="disabled">Private VPC</li>
+        </ul>
+        <button class="btn-plan primary" onclick="alert('Redirecting to checkout...')">Start free trial</button>
+      </div>
+      <!-- Enterprise -->
+      <div class="price-card reveal reveal-delay-2">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price" style="font-size:2rem;padding-top:6px">Custom</div>
+        <div class="plan-period">billed annually</div>
+        <ul class="plan-features">
+          <li>Unlimited tokens</li>
+          <li>Unlimited deployments</li>
+          <li>24/7 dedicated support</li>
+          <li>Full API suite + SDKs</li>
+          <li>Private VPC deployment</li>
+          <li>99.99% uptime SLA</li>
+        </ul>
+        <button class="btn-plan outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <span class="s-tag">FAQ</span>
+      <h2>Frequently asked questions</h2>
+      <p class="section-sub" style="margin:14px auto 0">Can't find what you're looking for? Reach out to our team.</p>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          How does NovaSphere achieve 12ms latency?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>We operate a globally distributed network of inference nodes co-located with major CDN PoPs. Requests are routed to the nearest available node using our proprietary GeoDNS layer, eliminating cross-continent round-trips. Our custom inference runtime skips Python overhead entirely and speaks directly to CUDA kernels.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          What data privacy guarantees do you offer?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>We are GDPR, CCPA, HIPAA, and SOC 2 Type II compliant. Enterprise customers receive dedicated private VPC deployments where data never touches shared infrastructure. We never train on customer data by default. Data retention policies are fully configurable.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Can I bring my own fine-tuned models?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Absolutely. NovaSphere supports any HuggingFace-compatible model checkpoint. Upload via the CLI, our dashboard, or programmatically through the Model Registry API. We handle quantization, sharding, and serving automatically — you focus on the model, we handle the infrastructure.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          What happens if I exceed my monthly token quota?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>You'll never get a surprise bill without warning. We send alerts at 80% and 95% of your quota. When you hit 100%, you can choose to auto-upgrade, enable pay-as-you-go overages (billed at the on-demand rate), or gracefully pause requests. You're always in control.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Is there a free trial for paid plans?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Yes. Pro plans include a 14-day free trial with full feature access and no credit card required. Enterprise customers get a 30-day proof-of-concept with a dedicated solutions engineer to help with migration and integration.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          How does support work?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Starter users have access to our community Discord and public docs. Pro users get priority email support with a 4-hour response SLA. Enterprise customers receive a named support engineer, Slack Connect channel, and 24/7 on-call escalation for P0 incidents.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="contact-info reveal">
+        <span class="s-tag">Contact</span>
+        <h2>Let's build<br />something great</h2>
+        <p>Whether you're a solo founder or an enterprise team, our team is ready to help you ship faster and smarter.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉️</div>
+          <div class="contact-detail-text">
+            <p>Email us</p>
+            <p>hello@novasphere.ai</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">💬</div>
+          <div class="contact-detail-text">
+            <p>Sales enquiries</p>
+            <p>sales@novasphere.ai</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div class="contact-detail-text">
+            <p>Headquarters</p>
+            <p>548 Market St, San Francisco, CA 94104</p>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal reveal-delay-1">
+        <div class="form-row">
+          <div class="field"><label>First name</label><input type="text" placeholder="John" /></div>
+          <div class="field"><label>Last name</label><input type="text" placeholder="Smith" /></div>
+        </div>
+        <div class="field"><label>Work email</label><input type="email" placeholder="john@company.com" /></div>
+        <div class="field">
+          <label>I'm interested in</label>
+          <select>
+            <option value="">Select an option…</option>
+            <option>Pro plan</option>
+            <option>Enterprise plan</option>
+            <option>Technical demo</option>
+            <option>Partnership</option>
+          </select>
+        </div>
+        <div class="field"><label>Message</label><textarea placeholder="Tell us about your project…"></textarea></div>
+        <button class="form-btn" id="formBtn">Send message →</button>
+        <div class="form-success" id="formSuccess">✓ Message sent! We'll be in touch within 24 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <h2>Ready to ship 10× faster?</h2>
+      <p>Join 4,200+ companies already building the future with NovaSphere. No contracts, no surprises.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="#pricing" class="btn-primary">Start for free →</a>
+        <a href="#contact" class="btn-outline">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">NovaSphere</a>
+        <p>AI-powered infrastructure for the next generation of human-machine collaboration.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-btn" aria-label="GitHub">⌥</a>
+          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-btn" aria-label="Discord">◈</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Roadmap</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">SDKs</a></li>
+          <li><a href="#">Guides</a></li>
+          <li><a href="#">Community</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 NovaSphere Inc. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── NAV SCROLL ── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  }, { passive: true });
+
+  /* ── HAMBURGER ── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── FAQ ACCORDION ── */
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── ANIMATED COUNTER ── */
+  function animateCounters() {
+    document.querySelectorAll('.metric-val').forEach(el => {
+      const text = el.textContent;
+      const num = parseFloat(text.replace(/[^0-9.]/g, ''));
+      if (isNaN(num)) return;
+      const suffix = text.replace(/[0-9.]/g, '');
+      const duration = 1800;
+      const start = performance.now();
+      function update(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (num < 100 ? (num * eased).toFixed(num % 1 !== 0 ? 2 : 0) : Math.round(num * eased).toLocaleString()) + suffix;
+        if (t < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    });
+  }
+  const metricsSection = document.querySelector('.hero-metrics');
+  const counterObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) { animateCounters(); counterObserver.disconnect(); }
+  }, { threshold: 0.5 });
+  counterObserver.observe(metricsSection);
+
+  /* ── CONTACT FORM ── */
+  document.getElementById('formBtn').addEventListener('click', function() {
+    this.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+
+  /* ── CURSOR GLOW (desktop only) ── */
+  if (window.matchMedia('(pointer: fine)').matches) {
+    const glow = document.createElement('div');
+    glow.style.cssText = `position:fixed;width:300px;height:300px;border-radius:50%;pointer-events:none;z-index:0;transition:opacity .3s;
+      background:radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+      transform:translate(-50%,-50%);top:0;left:0;`;
+    document.body.appendChild(glow);
+    window.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    }, { passive: true });
+  }
+</script>
+</body>
+</html>
