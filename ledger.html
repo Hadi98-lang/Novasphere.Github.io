@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger — Daily Focus &amp; Habit Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #d9e3ce;
+    --paper-alt: #cddac0;
+    --paper-light: #e7eedd;
+    --ink: #263420;
+    --ink-soft: rgba(38,52,32,0.62);
+    --rule: #b6533f;
+    --rule-faint: rgba(182,83,63,0.35);
+    --brass: #a3792f;
+    --brass-light: #d9b976;
+    --card: #eef2e4;
+    --line: rgba(38,52,32,0.18);
+    --max: 980px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #1c2417;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--ink);
+    padding: 28px 16px 60px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .book {
+    width: 100%;
+    max-width: var(--max);
+    background: var(--paper);
+    border: 1px solid rgba(38,52,32,0.35);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    position: relative;
+    padding-left: 34px;
+  }
+
+  /* stitched spine */
+  .book::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 34px;
+    background: repeating-linear-gradient(
+      180deg,
+      var(--brass) 0px, var(--brass) 2px,
+      transparent 2px, transparent 18px
+    );
+    background-color: #4a3a1e;
+    border-right: 1px solid rgba(0,0,0,0.3);
+  }
+
+  /* ruled lines across the whole page */
+  .book {
+    background-image:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0px, transparent 37px,
+        var(--rule-faint) 37px, var(--rule-faint) 38px
+      );
+  }
+
+  header.cover {
+    padding: 40px 40px 26px;
+    border-bottom: 3px double var(--ink);
+  }
+  header.cover .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header.cover h1 {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 700;
+    font-size: clamp(30px, 5vw, 44px);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  header.cover .date {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  header.cover .subtitle {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    max-width: 56ch;
+  }
+
+  main {
+    padding: 8px 40px 40px;
+    display: grid;
+    gap: 6px;
+  }
+
+  section {
+    padding: 26px 0 10px;
+  }
+
+  .section-title {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .section-title .folio {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--brass);
+    font-weight: 600;
+  }
+  .section-hint {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+
+  /* ---------- TASK LEDGER ---------- */
+  .ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .ledger-table thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 600;
+    border-bottom: 1px solid var(--ink);
+    padding: 0 8px 8px;
+  }
+  .ledger-table thead th.num { text-align: right; }
+  .ledger-table tbody tr {
+    border-bottom: 1px solid var(--line);
+  }
+  .ledger-table td {
+    padding: 10px 8px;
+    font-size: 14.5px;
+    vertical-align: middle;
+  }
+  .ledger-table td.desc.done {
+    text-decoration: line-through;
+    color: var(--ink-soft);
+  }
+  .row-index {
+    color: var(--brass);
+    font-weight: 600;
+    width: 34px;
+  }
+  .check-cell { width: 46px; }
+  .stamp-btn {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    font-size: 14px;
+    transition: transform 0.15s ease;
+  }
+  .stamp-btn:hover { transform: scale(1.08); }
+  .stamp-btn.done {
+    color: var(--rule);
+    border-color: var(--rule);
+    transform: rotate(-8deg);
+  }
+  .stamp-btn:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 15px;
+    padding: 2px 6px;
+  }
+  .del-btn:hover { color: var(--rule); }
+  .del-btn:focus-visible { outline: 2px solid var(--brass); }
+
+  .add-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .add-row input {
+    flex: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    color: var(--ink);
+  }
+  .add-row input:focus-visible { outline: 2px solid var(--brass); }
+  .add-row button {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    background: var(--ink);
+    color: var(--paper-light);
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+  }
+  .add-row button:hover { background: var(--rule); }
+  .add-row button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+  /* ---------- FOCUS TIMER ---------- */
+  .timer-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 36px;
+    align-items: center;
+  }
+  .dial {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+  }
+  .dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .dial .track { fill: none; stroke: var(--line); stroke-width: 6; }
+  .dial .progress { fill: none; stroke: var(--rule); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.3s linear; }
+  .dial .readout {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .dial .readout .time {
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .dial .readout .mode {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .timer-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .timer-controls .buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .timer-controls button {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 18px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .timer-controls button.primary {
+    background: var(--ink);
+    color: var(--paper-light);
+  }
+  .timer-controls button:hover { border-color: var(--rule); color: var(--rule); }
+  .timer-controls button.primary:hover { background: var(--rule); color: var(--paper-light); }
+  .timer-controls button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+  .sessions-line {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .sessions-line b { color: var(--ink); }
+
+  /* ---------- HABIT GRID ---------- */
+  .habit-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .habit-table th, .habit-table td {
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .habit-table thead th {
+    color: var(--ink-soft);
+    font-weight: 600;
+    border-bottom: 1px solid var(--ink);
+  }
+  .habit-table thead th:first-child { text-align: left; }
+  .habit-table tbody td:first-child {
+    text-align: left;
+    font-size: 13.5px;
+    padding-right: 14px;
+  }
+  .habit-table tbody tr { border-bottom: 1px solid var(--line); }
+  .habit-cell-btn {
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    cursor: pointer;
+    color: transparent;
+    font-size: 13px;
+  }
+  .habit-cell-btn.on {
+    background: var(--brass-light);
+    border-color: var(--brass);
+    color: var(--ink);
+  }
+  .habit-cell-btn:hover { border-color: var(--brass); }
+  .habit-cell-btn:focus-visible { outline: 2px solid var(--brass); outline-offset: 1px; }
+  .habit-streak {
+    font-size: 12px;
+    color: var(--brass);
+    font-weight: 600;
+  }
+
+  .add-habit {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .add-habit input {
+    flex: 1;
+    max-width: 260px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    color: var(--ink);
+  }
+  .add-habit input:focus-visible { outline: 2px solid var(--brass); }
+  .add-habit button {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: transparent;
+    border: 1px solid var(--ink);
+    padding: 0 16px;
+    cursor: pointer;
+  }
+  .add-habit button:hover { border-color: var(--rule); color: var(--rule); }
+  .add-habit button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+  /* ---------- TOTALS FOOTER ---------- */
+  .totals {
+    border-top: 3px double var(--ink);
+    padding: 22px 40px 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .totals .item {
+    text-align: center;
+  }
+  .totals .val {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--ink);
+  }
+  .totals .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .book { padding-left: 22px; }
+    .book::before { width: 22px; }
+    header.cover, main, .totals { padding-left: 20px; padding-right: 20px; }
+    .timer-wrap { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .timer-controls { align-items: center; }
+    .totals { grid-template-columns: 1fr; gap: 14px; }
+    .habit-table { font-size: 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stamp-btn, .dial .progress { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="book">
+  <header class="cover">
+    <div class="top">
+      <h1>The Daily Ledger</h1>
+      <div class="date" id="todayDate"></div>
+    </div>
+    <p class="subtitle">A page for what gets done today — tasks entered, focus sessions logged, habits stamped in.</p>
+  </header>
+
+  <main>
+    <section id="tasksSection">
+      <h2 class="section-title"><span class="folio">Fol. I</span> Tasks</h2>
+      <p class="section-hint">Enter a line, stamp it closed when it's done.</p>
+      <table class="ledger-table">
+        <thead>
+          <tr>
+            <th class="check-cell"></th>
+            <th class="row-index">No.</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="taskBody"></tbody>
+      </table>
+      <div class="add-row">
+        <input id="taskInput" type="text" placeholder="Write in a task…" maxlength="80" />
+        <button id="addTaskBtn">Enter</button>
+      </div>
+    </section>
+
+    <section id="timerSection">
+      <h2 class="section-title"><span class="folio">Fol. II</span> Focus Session</h2>
+      <p class="section-hint">25 minutes on, 5 minutes off. Standard practice.</p>
+      <div class="timer-wrap">
+        <div class="dial">
+          <svg viewBox="0 0 120 120">
+            <circle class="track" cx="60" cy="60" r="52" />
+            <circle class="progress" id="progressRing" cx="60" cy="60" r="52" />
+          </svg>
+          <div class="readout">
+            <div class="time" id="timeReadout">25:00</div>
+            <div class="mode" id="modeReadout">Focus</div>
+          </div>
+        </div>
+        <div class="timer-controls">
+          <div class="buttons">
+            <button class="primary" id="startPauseBtn">Start</button>
+            <button id="resetBtn">Reset</button>
+            <button id="skipBtn">Skip</button>
+          </div>
+          <div class="sessions-line">Sessions completed today: <b id="sessionCount">0</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="habitSection">
+      <h2 class="section-title"><span class="folio">Fol. III</span> Habits</h2>
+      <p class="section-hint">Stamp each day a habit is kept, Mon through Sun.</p>
+      <table class="habit-table" id="habitTable">
+        <thead>
+          <tr>
+            <th>Habit</th>
+            <th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th>
+            <th>Streak</th>
+          </tr>
+        </thead>
+        <tbody id="habitBody"></tbody>
+      </table>
+      <div class="add-habit">
+        <input id="habitInput" type="text" placeholder="Add a habit…" maxlength="30" />
+        <button id="addHabitBtn">Add</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="totals">
+    <div class="item">
+      <div class="val" id="totalTasksDone">0/0</div>
+      <div class="lbl">Tasks closed</div>
+    </div>
+    <div class="item">
+      <div class="val" id="totalSessions">0</div>
+      <div class="lbl">Focus sessions</div>
+    </div>
+    <div class="item">
+      <div class="val" id="bestStreak">0 days</div>
+      <div class="lbl">Best habit streak</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ---------- date ---------- */
+  var dateEl = document.getElementById('todayDate');
+  var today = new Date();
+  dateEl.textContent = today.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  /* ---------- TASKS ---------- */
+  var tasks = [
+    { text: 'Reply to client feedback', done: false },
+    { text: 'Export final assets', done: true }
+  ];
+  var taskBody = document.getElementById('taskBody');
+  var taskInput = document.getElementById('taskInput');
+  var addTaskBtn = document.getElementById('addTaskBtn');
+
+  function renderTasks() {
+    taskBody.innerHTML = '';
+    tasks.forEach(function (t, i) {
+      var tr = document.createElement('tr');
+
+      var tdCheck = document.createElement('td');
+      tdCheck.className = 'check-cell';
+      var stampBtn = document.createElement('button');
+      stampBtn.className = 'stamp-btn' + (t.done ? ' done' : '');
+      stampBtn.type = 'button';
+      stampBtn.setAttribute('aria-label', t.done ? 'Mark task open' : 'Mark task done');
+      stampBtn.textContent = '✓';
+      stampBtn.addEventListener('click', function () {
+        t.done = !t.done;
+        renderTasks();
+        updateTotals();
+      });
+      tdCheck.appendChild(stampBtn);
+
+      var tdIndex = document.createElement('td');
+      tdIndex.className = 'row-index';
+      tdIndex.textContent = String(i + 1).padStart(2, '0');
+
+      var tdDesc = document.createElement('td');
+      tdDesc.className = 'desc' + (t.done ? ' done' : '');
+      tdDesc.textContent = t.text;
+
+      var tdDel = document.createElement('td');
+      var delBtn = document.createElement('button');
+      delBtn.className = 'del-btn';
+      delBtn.type = 'button';
+      delBtn.setAttribute('aria-label', 'Delete task');
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', function () {
+        tasks.splice(i, 1);
+        renderTasks();
+        updateTotals();
+      });
+      tdDel.appendChild(delBtn);
+
+      tr.appendChild(tdCheck);
+      tr.appendChild(tdIndex);
+      tr.appendChild(tdDesc);
+      tr.appendChild(tdDel);
+      taskBody.appendChild(tr);
+    });
+  }
+
+  function addTask() {
+    var val = taskInput.value.trim();
+    if (!val) return;
+    tasks.push({ text: val, done: false });
+    taskInput.value = '';
+    renderTasks();
+    updateTotals();
+  }
+  addTaskBtn.addEventListener('click', addTask);
+  taskInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') addTask();
+  });
+
+  /* ---------- TIMER ---------- */
+  var FOCUS_SECONDS = 25 * 60;
+  var BREAK_SECONDS = 5 * 60;
+  var remaining = FOCUS_SECONDS;
+  var mode = 'Focus';
+  var running = false;
+  var intervalId = null;
+  var sessionCount = 0;
+
+  var timeReadout = document.getElementById('timeReadout');
+  var modeReadout = document.getElementById('modeReadout');
+  var startPauseBtn = document.getElementById('startPauseBtn');
+  var resetBtn = document.getElementById('resetBtn');
+  var skipBtn = document.getElementById('skipBtn');
+  var sessionCountEl = document.getElementById('sessionCount');
+  var progressRing = document.getElementById('progressRing');
+  var RADIUS = 52;
+  var CIRC = 2 * Math.PI * RADIUS;
+  progressRing.style.strokeDasharray = CIRC.toFixed(2);
+
+  function renderTimer() {
+    var total = mode === 'Focus' ? FOCUS_SECONDS : BREAK_SECONDS;
+    var m = Math.floor(remaining / 60);
+    var s = remaining % 60;
+    timeReadout.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    modeReadout.textContent = mode;
+    var frac = remaining / total;
+    progressRing.style.strokeDashoffset = (CIRC * (1 - frac)).toFixed(2);
+    startPauseBtn.textContent = running ? 'Pause' : 'Start';
+  }
+
+  function tick() {
+    remaining--;
+    if (remaining <= 0) {
+      if (mode === 'Focus') {
+        sessionCount++;
+        sessionCountEl.textContent = sessionCount;
+        mode = 'Break';
+        remaining = BREAK_SECONDS;
+      } else {
+        mode = 'Focus';
+        remaining = FOCUS_SECONDS;
+      }
+      updateTotals();
+    }
+    renderTimer();
+  }
+
+  startPauseBtn.addEventListener('click', function () {
+    running = !running;
+    if (running) {
+      intervalId = setInterval(tick, 1000);
+    } else {
+      clearInterval(intervalId);
+    }
+    renderTimer();
+  });
+
+  resetBtn.addEventListener('click', function () {
+    running = false;
+    clearInterval(intervalId);
+    mode = 'Focus';
+    remaining = FOCUS_SECONDS;
+    renderTimer();
+  });
+
+  skipBtn.addEventListener('click', function () {
+    if (mode === 'Focus') {
+      sessionCount++;
+      sessionCountEl.textContent = sessionCount;
+      mode = 'Break';
+      remaining = BREAK_SECONDS;
+    } else {
+      mode = 'Focus';
+      remaining = FOCUS_SECONDS;
+    }
+    updateTotals();
+    renderTimer();
+  });
+
+  renderTimer();
+
+  /* ---------- HABITS ---------- */
+  var days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  var habits = [
+    { name: 'Read 20 min', marks: [true, true, false, true, false, false, false] },
+    { name: 'Move / exercise', marks: [true, false, true, true, true, false, false] },
+    { name: 'No late screens', marks: [false, true, true, false, true, false, false] }
+  ];
+  var habitBody = document.getElementById('habitBody');
+  var habitInput = document.getElementById('habitInput');
+  var addHabitBtn = document.getElementById('addHabitBtn');
+
+  function computeStreak(marks) {
+    var streak = 0;
+    for (var i = marks.length - 1; i >= 0; i--) {
+      if (marks[i]) streak++;
+      else break;
+    }
+    return streak;
+  }
+
+  function renderHabits() {
+    habitBody.innerHTML = '';
+    habits.forEach(function (h, hi) {
+      var tr = document.createElement('tr');
+
+      var tdName = document.createElement('td');
+      tdName.textContent = h.name;
+      tr.appendChild(tdName);
+
+      days.forEach(function (d, di) {
+        var td = document.createElement('td');
+        var btn = document.createElement('button');
+        btn.className = 'habit-cell-btn' + (h.marks[di] ? ' on' : '');
+        btn.type = 'button';
+        btn.textContent = '●';
+        btn.setAttribute('aria-label', h.name + ' — ' + d + (h.marks[di] ? ' done' : ' not done'));
+        btn.addEventListener('click', function () {
+          h.marks[di] = !h.marks[di];
+          renderHabits();
+          updateTotals();
+        });
+        td.appendChild(btn);
+        tr.appendChild(td);
+      });
+
+      var tdStreak = document.createElement('td');
+      tdStreak.className = 'habit-streak';
+      tdStreak.textContent = computeStreak(h.marks) + 'd';
+      tr.appendChild(tdStreak);
+
+      habitBody.appendChild(tr);
+    });
+  }
+
+  function addHabit() {
+    var val = habitInput.value.trim();
+    if (!val) return;
+    habits.push({ name: val, marks: [false, false, false, false, false, false, false] });
+    habitInput.value = '';
+    renderHabits();
+    updateTotals();
+  }
+  addHabitBtn.addEventListener('click', addHabit);
+  habitInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') addHabit();
+  });
+
+  /* ---------- TOTALS ---------- */
+  function updateTotals() {
+    var done = tasks.filter(function (t) { return t.done; }).length;
+    document.getElementById('totalTasksDone').textContent = done + '/' + tasks.length;
+    document.getElementById('totalSessions').textContent = sessionCount;
+    var best = habits.reduce(function (max, h) {
+      return Math.max(max, computeStreak(h.marks));
+    }, 0);
+    document.getElementById('bestStreak').textContent = best + (best === 1 ? ' day' : ' days');
+  }
+
+  renderTasks();
+  renderHabits();
+  updateTotals();
+})();
+</script>
+
+</body>
+</html>
